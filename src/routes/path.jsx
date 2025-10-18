@@ -4,5 +4,4 @@ export const PATHS = {
   register: "/register",
   dashboard: "/dashboard,",
   pay: "/pay",
-  paymentresult: "/paymentresult"
 };

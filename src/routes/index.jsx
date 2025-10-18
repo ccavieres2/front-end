@@ -9,7 +9,6 @@ const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
 const DashBoard = lazy(() => import("../pages/DashBoard"))
 const Pay = lazy(() => import("../payments/Pay"))
-const PaymentResult = lazy(() => import("../payments/PaymentResult"))
 
 export default function AppRoutes() {
   return (
@@ -21,7 +20,6 @@ export default function AppRoutes() {
           <Route path={PATHS.register} element={<Register />} />
           <Route path={PATHS.dashboard} element={<DashBoard/>}/>
           <Route path={PATHS.pay} element={<Pay/>}/>
-          <Route path={PATHS.paymentresult} element={<PaymentResult />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
