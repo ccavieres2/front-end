@@ -5,16 +5,24 @@ import { apiGet, apiPost, apiPut, apiDelete } from "../lib/api";
 /* UI helpers (igual que antes) */
 function IconButton({ title, onClick, children, className = "" }) {
   return (
-    <button type="button" title={title} onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm hover:bg-slate-50 ${className}`}>
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm hover:bg-slate-50 ${className}`}
+    >
       {children}
     </button>
   );
 }
 function PrimaryButton({ title, onClick, children }) {
   return (
-    <button type="button" title={title} onClick={onClick}
-      className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 text-white px-4 py-2 text-sm font-semibold hover:bg-indigo-700">
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 text-white px-4 py-2 text-sm font-semibold hover:bg-indigo-700"
+    >
       {children}
     </button>
   );
@@ -35,8 +43,13 @@ function Modal({ open, title, onClose, onSubmit, children, submitText = "Guardar
         </div>
         <div className="mt-4">{children}</div>
         <div className="mt-6 flex justify-end gap-2">
-          <button onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-slate-50">Cancelar</button>
-          <button onClick={onSubmit} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+          <button onClick={onClose} className="rounded-lg border px-4 py-2 text-sm hover:bg-slate-50">
+            Cancelar
+          </button>
+          <button
+            onClick={onSubmit}
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
             {submitText}
           </button>
         </div>
@@ -46,16 +59,8 @@ function Modal({ open, title, onClose, onSubmit, children, submitText = "Guardar
 }
 
 /* Mapeo de estados (API <-> UI) */
-const STATUS = {
-  pending: "Pendiente",
-  in_progress: "En curso",
-  done: "Completado",
-};
-const STATUS_FROM_LABEL = {
-  "Pendiente": "pending",
-  "En curso": "in_progress",
-  "Completado": "done",
-};
+const STATUS = { pending: "Pendiente", in_progress: "En curso", done: "Completado" };
+const STATUS_FROM_LABEL = { Pendiente: "pending", "En curso": "in_progress", Completado: "done" };
 
 export default function DashBoard() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -75,8 +80,7 @@ export default function DashBoard() {
     setLoadingList(true);
     try {
       const data = await apiGet("/orders/");
-      // Normaliza a etiquetas en español para la UI
-      const normalized = data.map(o => ({
+      const normalized = data.map((o) => ({
         id: o.id,
         cliente: o.client,
         vehiculo: o.vehicle,
@@ -92,7 +96,9 @@ export default function DashBoard() {
       setLoadingList(false);
     }
   }
-  useEffect(() => { loadOrders(); }, []);
+  useEffect(() => {
+    loadOrders();
+  }, []);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -140,7 +146,7 @@ export default function DashBoard() {
         await apiPost("/orders/", payload);
       }
       setModalOpen(false);
-      await loadOrders(); // refresca lista
+      await loadOrders();
     } catch (e) {
       console.error(e);
       setErrMsg("No se pudo guardar la orden.");
@@ -161,7 +167,8 @@ export default function DashBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    // 👇 Layout en columna para empujar el footer al final
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
       {/* NAVBAR (logo izq / drawer der) */}
       <header className="sticky top-0 z-40 bg-white/70 backdrop-blur border-b">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
@@ -179,7 +186,13 @@ export default function DashBoard() {
               </svg>
               <span>Alertas</span>
             </IconButton>
-            <IconButton title="Salir" onClick={() => { localStorage.clear(); location.href="/login"; }}>
+            <IconButton
+              title="Salir"
+              onClick={() => {
+                localStorage.clear();
+                location.href = "/login";
+              }}
+            >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M16 17l5-5-5-5" />
                 <path d="M21 12H9" />
@@ -191,7 +204,8 @@ export default function DashBoard() {
               className="rounded-lg p-2 hover:bg-slate-100"
               onClick={() => setDrawerOpen(true)}
               title="Abrir menú"
-              aria-label="Abrir menú">
+              aria-label="Abrir menú"
+            >
               <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 6h18M3 12h18M3 18h18" />
               </svg>
@@ -202,18 +216,26 @@ export default function DashBoard() {
 
       {/* Drawer derecho */}
       {drawerOpen && <div className="fixed inset-0 z-40 bg-black/30 lg:hidden" onClick={() => setDrawerOpen(false)} />}
-      <aside className={`fixed inset-y-0 right-0 z-50 w-72 bg-white border-l shadow-lg transform transition-transform duration-200 ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
-             aria-hidden={!drawerOpen}>
+      <aside
+        className={`fixed inset-y-0 right-0 z-50 w-72 bg-white border-l shadow-lg transform transition-transform duration-200 ${
+          drawerOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        aria-hidden={!drawerOpen}
+      >
         <div className="flex items-center gap-2 p-4 border-b">
           <div className="font-semibold">Panel</div>
-          <button className="ml-auto rounded-lg p-2 hover:bg-slate-100" onClick={() => setDrawerOpen(false)} title="Cerrar menú">
+          <button
+            className="ml-auto rounded-lg p-2 hover:bg-slate-100"
+            onClick={() => setDrawerOpen(false)}
+            title="Cerrar menú"
+          >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
         </div>
         <nav className="p-3 space-y-1 text-sm">
-          {["Órdenes","Clientes","Servicios","Ajustes"].map((label) => (
+          {["Órdenes", "Clientes", "Servicios", "Ajustes"].map((label) => (
             <a key={label} href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-slate-100">
               <span className="h-2 w-2 rounded-full bg-indigo-500" />
               <span>{label}</span>
@@ -222,14 +244,16 @@ export default function DashBoard() {
         </nav>
       </aside>
 
-      {/* Contenido */}
-      <main className="mx-auto max-w-7xl px-4 py-6">
+      {/* Contenido: ocupa el espacio restante */}
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 py-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-2xl font-bold tracking-tight">Órdenes</h1>
           <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">
             <div className="relative">
               <input
-                type="text" value={q} onChange={(e) => setQ(e.target.value)}
+                type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
                 placeholder="Buscar por cliente, vehículo, servicio…"
                 className="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 pl-9 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
               />
@@ -249,6 +273,7 @@ export default function DashBoard() {
           </div>
         </div>
 
+        {/* Tarjeta de lista: sin altura fija, se adapta al espacio; el main ya mantiene el footer abajo */}
         <div className="mt-4 overflow-hidden rounded-2xl border bg-white shadow-sm">
           <div className="hidden md:grid grid-cols-12 gap-4 border-b bg-slate-50 px-4 py-3 text-xs font-semibold text-slate-500">
             <div className="col-span-3">Cliente</div>
@@ -258,7 +283,9 @@ export default function DashBoard() {
             <div className="col-span-1 text-right pr-1">Acciones</div>
           </div>
 
-          {loadingList && <div className="px-4 py-8 text-center text-sm text-slate-500">Cargando…</div>}
+          {loadingList && (
+            <div className="px-4 py-8 text-center text-sm text-slate-500">Cargando…</div>
+          )}
 
           <ul className="divide-y">
             {filtered.map((o) => (
@@ -270,11 +297,17 @@ export default function DashBoard() {
                 <div className="hidden md:block md:col-span-3 text-slate-700">{o.vehiculo}</div>
                 <div className="md:col-span-3 text-slate-700">{o.servicio}</div>
                 <div className="md:col-span-2">
-                  <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                    o.estado === "Completado" ? "bg-emerald-100 text-emerald-700"
-                    : o.estado === "En curso" ? "bg-amber-100 text-amber-700"
-                    : "bg-slate-100 text-slate-700"
-                  }`}>{o.estado}</span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                      o.estado === "Completado"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : o.estado === "En curso"
+                        ? "bg-amber-100 text-amber-700"
+                        : "bg-slate-100 text-slate-700"
+                    }`}
+                  >
+                    {o.estado}
+                  </span>
                 </div>
                 <div className="md:col-span-1 flex items-center justify-end gap-2">
                   <IconButton title="Editar" onClick={() => openEdit(o.id)} className="px-2 py-1">
@@ -294,13 +327,16 @@ export default function DashBoard() {
               </li>
             ))}
             {!loadingList && filtered.length === 0 && (
-              <li className="px-4 py-8 text-center text-sm text-slate-500">No hay resultados para “{q}”.</li>
+              <li className="px-4 py-8 text-center text-sm text-slate-500">
+                No hay resultados para “{q}”.
+              </li>
             )}
           </ul>
         </div>
       </main>
 
-      <footer className="border-t bg-white">
+      {/* FOOTER pegado abajo */}
+      <footer className="mt-auto border-t bg-white">
         <div className="mx-auto max-w-7xl px-4 py-4 text-xs text-slate-500 flex items-center justify-between">
           <span>© {new Date().getFullYear()} Atgest</span>
           <span className="hidden sm:inline">v0.1 · Demo de panel</span>
@@ -315,27 +351,41 @@ export default function DashBoard() {
         onSubmit={saveForm}
         submitText={saving ? "Guardando..." : editing ? "Guardar cambios" : "Crear orden"}
       >
-        {errMsg && <div className="mb-3 rounded bg-red-100 text-red-700 px-3 py-2 text-sm">{errMsg}</div>}
+        {errMsg && (
+          <div className="mb-3 rounded bg-red-100 text-red-700 px-3 py-2 text-sm">{errMsg}</div>
+        )}
         <div className="grid gap-4">
           <div>
             <label className="block text-sm text-slate-700 mb-1">Cliente</label>
-            <input value={form.cliente} onChange={(e) => setForm((f) => ({ ...f, cliente: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            <input
+              value={form.cliente}
+              onChange={(e) => setForm((f) => ({ ...f, cliente: e.target.value }))}
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
           </div>
           <div>
             <label className="block text-sm text-slate-700 mb-1">Vehículo</label>
-            <input value={form.vehiculo} onChange={(e) => setForm((f) => ({ ...f, vehiculo: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            <input
+              value={form.vehiculo}
+              onChange={(e) => setForm((f) => ({ ...f, vehiculo: e.target.value }))}
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
           </div>
           <div>
             <label className="block text-sm text-slate-700 mb-1">Servicio</label>
-            <input value={form.servicio} onChange={(e) => setForm((f) => ({ ...f, servicio: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            <input
+              value={form.servicio}
+              onChange={(e) => setForm((f) => ({ ...f, servicio: e.target.value }))}
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
           </div>
           <div>
             <label className="block text-sm text-slate-700 mb-1">Estado</label>
-            <select value={form.estado} onChange={(e) => setForm((f) => ({ ...f, estado: e.target.value }))}
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <select
+              value={form.estado}
+              onChange={(e) => setForm((f) => ({ ...f, estado: e.target.value }))}
+              className="w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
               <option>Pendiente</option>
               <option>En curso</option>
               <option>Completado</option>
