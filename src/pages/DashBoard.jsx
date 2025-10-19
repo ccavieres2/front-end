@@ -234,14 +234,33 @@ export default function DashBoard() {
             </svg>
           </button>
         </div>
+        
+        {/* --- NAVEGACIÓN ACTUALIZADA --- */}
         <nav className="p-3 space-y-1 text-sm">
-          {["Órdenes", "Clientes", "Servicios", "Ajustes"].map((label) => (
-            <a key={label} href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-slate-100">
+          {[
+            { label: "Órdenes", href: "/dashboard" }, // O la ruta principal
+            { label: "Inventario", href: "/inventory"},
+            { label: "Clientes", href: "/clientes" },
+            { label: "Servicios", href: "/servicios" },
+            { label: "Ajustes", href: "/ajustes" },
+          ].map((link) => (
+            <a 
+              key={link.label} 
+              href={link.href} // Href real para navegar
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 ${
+                // Marca 'Órdenes' como activa en esta página
+                link.label === "Órdenes"
+                  ? "bg-slate-100 font-semibold"
+                  : "hover:bg-slate-100"
+              }`}
+            >
               <span className="h-2 w-2 rounded-full bg-indigo-500" />
-              <span>{label}</span>
+              <span>{link.label}</span>
             </a>
           ))}
         </nav>
+        {/* --- FIN DE LA NAVEGACIÓN --- */}
+
       </aside>
 
       {/* Contenido: ocupa el espacio restante */}
